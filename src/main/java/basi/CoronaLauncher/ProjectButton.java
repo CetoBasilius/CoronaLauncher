@@ -62,50 +62,44 @@ public class ProjectButton extends JPanel{
 		updateButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
-				final String[] commands = new String[3];
+				final String[] commands = new String[5];
 				commands[0] = "git reset --hard";
 				commands[1] = "git pull";
-				commands[2] = "git submodule foreach git pull origin master";
+				commands[2] = "git submodule foreach git checkout master";
+				commands[3] = "git submodule foreach git pull origin master";
+				commands[4] = "git --git-dir " + projectURL + "/.git rev-parse --short HEAD";
 				
 				final File projectDirectory = new File(projectURL);
 				
 				Callback completedCommand = new Callback() {
-					private int timesCompleted = 0;
+					private int indexCommand = 0;
+					
 					public void onComplete() {
-						timesCompleted += 1;
-						if (timesCompleted >= commands.length) {
-							String hashCommand = "git --git-dir " + projectURL + "/.git rev-parse --short HEAD";
+						if (indexCommand < commands.length) {
 							try {            
 								Runtime rt = Runtime.getRuntime();
-								Process proc = rt.exec(hashCommand, null, projectDirectory);
+								Process proc = rt.exec(commands[indexCommand], null, projectDirectory);
 								
 								StreamGobbler errorGobbler = new StreamGobbler(proc.getErrorStream(), proc, labelHash, null);            
-								StreamGobbler outputGobbler = new StreamGobbler(proc.getInputStream(), proc, labelHash, null);
+								StreamGobbler outputGobbler = new StreamGobbler(proc.getInputStream(), proc, labelHash, this);
 								
 								errorGobbler.start();
 								outputGobbler.start();
 							} catch (Throwable t) {
 								t.printStackTrace();
 							}
+							labelProgress.setText("Updating...");
+						} else {
+							String tooltipText = labelHash.getToolTipText();
+							tooltipText = "<html>" + tooltipText.replace("\n", "<br>") + "</html>";
+							labelHash.setToolTipText(tooltipText);
 							labelProgress.setText("Update complete");
 						}
+						indexCommand += 1;
 					}
 				};
 				
-				for (String command : commands) {
-					try {            
-						Runtime rt = Runtime.getRuntime();
-						Process proc = rt.exec(command, null, projectDirectory);
-						
-						StreamGobbler errorGobbler = new StreamGobbler(proc.getErrorStream(), proc, labelProgress, null);            
-						StreamGobbler outputGobbler = new StreamGobbler(proc.getInputStream(), proc, labelProgress, completedCommand);
-						
-						errorGobbler.start();
-						outputGobbler.start();
-					} catch (Throwable t) {
-						t.printStackTrace();
-					}
-				}
+				completedCommand.onComplete();
 			}
 		});
 		panelButtons.add(updateButton, BorderLayout.CENTER);

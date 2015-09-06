@@ -13,6 +13,7 @@ class StreamGobbler extends Thread
 	private Process process;
 	private Callback callback;
 	private JTextArea logText;
+	StringBuffer completeLog = new StringBuffer();
 
 	StreamGobbler(InputStream is, Process process, JLabel statusLabel, Callback callback, JTextArea logText) {
 		this.process = process;
@@ -35,14 +36,11 @@ class StreamGobbler extends Thread
 			InputStreamReader isr = new InputStreamReader(is);
 			BufferedReader br = new BufferedReader(isr);
 			
-			StringBuffer completeLog = new StringBuffer();
 			while( true ) {
 			    String line = br.readLine();
 				if (line != null) {
 					completeLog.append(line);
 					completeLog.append("\n");
-					
-					System.out.println(line);
 					
 					if (statusLabel != null) {
 						statusLabel.setText(line);
@@ -60,7 +58,11 @@ class StreamGobbler extends Thread
 				} catch (Exception e) {}
 			}
 			if (statusLabel != null) {
-				statusLabel.setToolTipText(completeLog.toString());
+				String oldText = statusLabel.getToolTipText();
+				if (oldText == null) {
+					oldText = "";
+				}
+				statusLabel.setToolTipText(oldText + "\n" + completeLog.toString());
 			}
 		} catch (Exception e) {}
 	}

@@ -80,7 +80,6 @@ public class RepoCloner {
 				if (event.getStateChange() == ItemEvent.SELECTED) {
 					Object item = event.getItem();
 					selectedBranch = item.toString();
-					System.out.println(selectedBranch);
 				}
 			}
 		});
@@ -101,9 +100,13 @@ public class RepoCloner {
 		scrollPane.getVerticalScrollBar().setUnitIncrement(20);
 		clonePanel.add(scrollPane);
 		
+		JPanel panelLog = new JPanel();
+		scrollPane.setViewportView(panelLog);
+		panelLog.setLayout(new BorderLayout(0, 0));
+		
 		logText = new JTextArea();
 		logText.setEditable(false);
-		scrollPane.add(logText);
+		panelLog.add(logText);
 	}
 	
 	private void cloneRepository() {
@@ -175,7 +178,7 @@ public class RepoCloner {
 			}
 			branchComboBox.setModel(new DefaultComboBoxModel(branchList.toArray()));
 			branchComboBox.setSelectedIndex(masterIndex);
-			
+			selectedBranch = branchList.get(masterIndex);
 			cloneButton.setEnabled(true);
 		} catch (Throwable t) {
 			t.printStackTrace();

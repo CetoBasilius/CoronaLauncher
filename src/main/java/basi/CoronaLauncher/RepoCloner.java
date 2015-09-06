@@ -18,8 +18,10 @@ import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.ScrollPaneConstants;
 
 public class RepoCloner {
 
@@ -45,7 +47,7 @@ public class RepoCloner {
 	private void initialize() {
 		formClone = new JFrame();
 		formClone.setTitle("Clone repository");
-		formClone.setBounds(100, 100, 600, 300);
+		formClone.setBounds(100, 100, 600, 400);
 		formClone.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		formClone.toFront();
 		
@@ -93,8 +95,15 @@ public class RepoCloner {
 		});
 		cloneButton.setEnabled(false);
 		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		scrollPane.getVerticalScrollBar().setUnitIncrement(20);
+		clonePanel.add(scrollPane);
+		
 		logText = new JTextArea();
-		clonePanel.add(logText);
+		logText.setEditable(false);
+		scrollPane.add(logText);
 	}
 	
 	private void cloneRepository() {

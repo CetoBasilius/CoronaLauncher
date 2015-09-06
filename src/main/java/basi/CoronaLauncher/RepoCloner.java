@@ -21,7 +21,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
-public class Checkout {
+public class RepoCloner {
 
 	private JFrame formClone;
 	private JTextField remoteField;
@@ -34,7 +34,7 @@ public class Checkout {
 	/**
 	 * Create the application.
 	 */
-	public Checkout(String projectFolder) {
+	public RepoCloner(String projectFolder) {
 		this.projectFolder = projectFolder;
 		initialize();
 	}
@@ -44,7 +44,7 @@ public class Checkout {
 	 */
 	private void initialize() {
 		formClone = new JFrame();
-		formClone.setTitle("Checkout repository");
+		formClone.setTitle("Clone repository");
 		formClone.setBounds(100, 100, 600, 300);
 		formClone.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		formClone.toFront();

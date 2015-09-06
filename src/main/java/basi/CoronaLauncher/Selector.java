@@ -39,7 +39,7 @@ public class Selector extends JFrame {
 	private List<ProjectButton> projectButtons = new ArrayList<ProjectButton>();
 	private JTextField coronaPathField;
 	private JLabel labelStatus;
-	protected Checkout checkoutWindow;
+	protected RepoCloner checkoutWindow;
 
 	/**
 	 * Create the frame.
@@ -173,7 +173,7 @@ public class Selector extends JFrame {
 		checkoutButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (checkoutWindow == null) {
-					checkoutWindow = new Checkout(pathField.getText());
+					checkoutWindow = new RepoCloner(pathField.getText());
 				}
 				checkoutWindow.setVisible(true);
 			}

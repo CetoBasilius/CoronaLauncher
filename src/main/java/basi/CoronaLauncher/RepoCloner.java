@@ -121,16 +121,23 @@ public class RepoCloner {
 		String command = "git clone -b " + this.selectedBranch + " " + remoteField.getText() + " " + folderName;
 		
 		File projectFileFolder = new File(projectFolder);
+		
+		Callback cloneCallback = new Callback() {
+			private int times = 0;
+			public synchronized void onComplete() {
+				times += 1;
+				if (times >= 2) {
+					logText.setText(logText.getText() + "\nProcess complete.");
+				}
+			}
+		};
+		
 		try {            
 			Runtime rt = Runtime.getRuntime();
 			Process proc = rt.exec(command, null, projectFileFolder);
 			
-			StreamGobbler errorGobbler = new StreamGobbler(proc.getErrorStream(), proc, null, null, logText);            
-			StreamGobbler outputGobbler = new StreamGobbler(proc.getInputStream(), proc, null, new Callback() {
-				public void onComplete() {
-					logText.setText(logText.getText() + "\nProcess complete.");
-				}
-			}, logText);
+			StreamGobbler errorGobbler = new StreamGobbler(proc.getErrorStream(), proc, null, cloneCallback, logText);            
+			StreamGobbler outputGobbler = new StreamGobbler(proc.getInputStream(), proc, null, cloneCallback, logText);
 			
 			errorGobbler.start();
 			outputGobbler.start();
@@ -177,10 +184,14 @@ public class RepoCloner {
 					masterIndex = index;
 				}
 			}
-			branchComboBox.setModel(new DefaultComboBoxModel(branchList.toArray()));
-			branchComboBox.setSelectedIndex(masterIndex);
-			selectedBranch = branchList.get(masterIndex);
-			cloneButton.setEnabled(true);
+			if (masterIndex >= 0) {
+				branchComboBox.setModel(new DefaultComboBoxModel(branchList.toArray()));
+				branchComboBox.setSelectedIndex(masterIndex);
+				selectedBranch = branchList.get(masterIndex);
+				cloneButton.setEnabled(true);
+			} else {
+				cloneButton.setEnabled(false);
+			}
 		} catch (Throwable t) {
 			t.printStackTrace();
 		}

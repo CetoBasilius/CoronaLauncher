@@ -74,7 +74,7 @@ public class ProjectButton extends JPanel{
 				Callback completedCommand = new Callback() {
 					private int indexCommand = 0;
 					
-					public void onComplete() {
+					public synchronized void onComplete() {
 						if (indexCommand < commands.length) {
 							try {            
 								Runtime rt = Runtime.getRuntime();

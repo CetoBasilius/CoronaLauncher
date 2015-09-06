@@ -106,6 +106,8 @@ public class RepoCloner {
 		
 		logText = new JTextArea();
 		logText.setEditable(false);
+		logText.setAutoscrolls(true);
+		logText.setWrapStyleWord(true);
 		panelLog.add(logText);
 	}
 	
@@ -126,8 +128,7 @@ public class RepoCloner {
 			StreamGobbler errorGobbler = new StreamGobbler(proc.getErrorStream(), proc, null, null, logText);            
 			StreamGobbler outputGobbler = new StreamGobbler(proc.getInputStream(), proc, null, new Callback() {
 				public void onComplete() {
-					String oldText = logText.getText();
-					logText.setText(oldText + "\nProcess complete.");
+					logText.setText(logText.getText() + "\nProcess complete.");
 				}
 			}, logText);
 			

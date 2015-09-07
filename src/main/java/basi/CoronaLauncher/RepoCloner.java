@@ -32,6 +32,7 @@ public class RepoCloner {
 	private JButton cloneButton;
 	private String selectedBranch;
 	private String projectFolder;
+	private JButton fetchButton;
 
 	/**
 	 * Create the application.
@@ -62,7 +63,7 @@ public class RepoCloner {
 		remotePanel.add(remoteField);
 		remoteField.setColumns(28);
 		
-		JButton fetchButton = new JButton("Fetch");
+		fetchButton = new JButton("Fetch");
 		fetchButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				getBranches();
@@ -112,13 +113,17 @@ public class RepoCloner {
 	}
 	
 	private void cloneRepository() {
+		cloneButton.setEnabled(false);
+		fetchButton.setEnabled(false);
+		remoteField.setEnabled(false);
+		
 		String folderName = "";
 		if (!this.selectedBranch.equals("master")) {
 			File theFile = new File(remoteField.getText());
 			String projectName = theFile.getName();
-			folderName = projectName.split("\\.(?=[^\\.]+$)")[0] + this.selectedBranch;
+			folderName = projectName.split("\\.(?=[^\\.]+$)")[0] + "-" + this.selectedBranch;
 		}
-		String command = "git clone -b " + this.selectedBranch + " " + remoteField.getText() + " " + folderName;
+		String command = "git clone --recursive -b " + this.selectedBranch + " " + remoteField.getText() + " " + folderName;
 		
 		File projectFileFolder = new File(projectFolder);
 		
@@ -128,6 +133,10 @@ public class RepoCloner {
 				times += 1;
 				if (times >= 2) {
 					logText.setText(logText.getText() + "\nProcess complete.");
+					
+					cloneButton.setEnabled(true);
+					fetchButton.setEnabled(true);
+					remoteField.setEnabled(true);
 				}
 			}
 		};
@@ -148,6 +157,7 @@ public class RepoCloner {
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void getBranches() {
+		fetchButton.setEnabled(false);
 		String remoteText = remoteField.getText();
 		String command = "git ls-remote -h " + remoteText;
 		
@@ -195,6 +205,7 @@ public class RepoCloner {
 		} catch (Throwable t) {
 			t.printStackTrace();
 		}
+		fetchButton.setEnabled(true);
 	}
 	
 	public void setVisible(boolean value) {

@@ -21,6 +21,8 @@ public class ProjectButton extends JPanel{
 	private JLabel labelProgress;
 	private JLabel labelHash;
 	private Callback onLaunch;
+	private JButton launchButton;
+	private JButton updateButton;
 
 	public ProjectButton(String projectName, String absolutePath, Callback onLaunch){
 		super();
@@ -58,16 +60,20 @@ public class ProjectButton extends JPanel{
 		labelProgress.setHorizontalAlignment(SwingConstants.CENTER);
 		panelLabels.add(labelProgress, BorderLayout.CENTER);
 
-		JButton updateButton = new JButton("Update");
+		updateButton = new JButton("Update");
 		updateButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				updateButton.setEnabled(false);
+				launchButton.setEnabled(false);
 				
-				final String[] commands = new String[5];
+				final String[] commands = new String[7];
 				commands[0] = "git reset --hard";
 				commands[1] = "git pull";
-				commands[2] = "git submodule foreach git checkout master";
-				commands[3] = "git submodule foreach git pull origin master";
-				commands[4] = "git --git-dir " + projectURL + "/.git rev-parse --short HEAD";
+				commands[2] = "git submodule update --init --recursive";
+				commands[3] = "git submodule foreach git checkout master";
+				commands[4] = "git submodule foreach git pull origin master";
+				commands[5] = "git submodule update";
+				commands[6] = "git rev-parse --short HEAD";
 				
 				final File projectDirectory = new File(projectURL);
 				
@@ -94,6 +100,9 @@ public class ProjectButton extends JPanel{
 							tooltipText = "<html>" + tooltipText.replace("\n", "<br>") + "</html>";
 							labelHash.setToolTipText(tooltipText);
 							labelProgress.setText("Update complete");
+							
+							updateButton.setEnabled(true);
+							launchButton.setEnabled(true);
 						}
 						indexCommand += 1;
 					}
@@ -104,7 +113,7 @@ public class ProjectButton extends JPanel{
 		});
 		panelButtons.add(updateButton, BorderLayout.CENTER);
 
-		JButton launchButton = new JButton("Launch");
+		launchButton = new JButton("Launch");
 		launchButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (ProjectButton.this.onLaunch != null) {

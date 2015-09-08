@@ -2,6 +2,7 @@ package basi.CoronaLauncher;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -14,8 +15,9 @@ import javax.swing.border.BevelBorder;
 
 public class ProjectButton extends JPanel{
 
-	private static final int WIDTH_PANEL = 160;
-	private static final int HEIGHT_PANEL = 180;
+	private static final String ICON_DEFAULT_PATH = "/Icon@2x.png";
+	private static final int WIDTH_PANEL = 180;
+	private static final int HEIGHT_PANEL = 200;
 	private static final long serialVersionUID = 1L;
 	private String projectURL;
 	private JLabel labelProgress;
@@ -32,12 +34,15 @@ public class ProjectButton extends JPanel{
 		this.onLaunch = onLaunch;
 		
 		String gameName = projectName;
-		String iconPath = absolutePath + "/Icon.png";
+		String iconPath = absolutePath + ICON_DEFAULT_PATH;
 
 		this.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		this.setLayout(new BorderLayout(0, 0));
 
 		JLabel labelName = new JLabel(gameName);
+		Font font = labelName.getFont();
+		Font boldFont = new Font(font.getFontName(), Font.BOLD, font.getSize());
+		labelName.setFont(boldFont);
 		labelName.setHorizontalAlignment(SwingConstants.CENTER);
 		this.add(labelName, BorderLayout.NORTH);
 
@@ -111,7 +116,7 @@ public class ProjectButton extends JPanel{
 				completedCommand.onComplete();
 			}
 		});
-		panelButtons.add(updateButton, BorderLayout.CENTER);
+		panelButtons.add(updateButton, BorderLayout.WEST);
 
 		launchButton = new JButton("Launch");
 		launchButton.addActionListener(new ActionListener() {
@@ -121,6 +126,6 @@ public class ProjectButton extends JPanel{
 				}
 			}
 		});
-		panelButtons.add(launchButton, BorderLayout.SOUTH);
+		panelButtons.add(launchButton, BorderLayout.EAST);
 	}
 }

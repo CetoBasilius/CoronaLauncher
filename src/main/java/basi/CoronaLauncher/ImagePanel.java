@@ -13,7 +13,7 @@ import javax.swing.JPanel;
 public class ImagePanel extends JPanel{
 
 	private static final long serialVersionUID = 1L;
-	private static final String FILENAME_ICON_DEFAULT = "/Icon.png";
+	private static final String FILENAME_ICON_DEFAULT = "/Icon@2x.png";
 
 	public ImagePanel(String filename) {
 		try {

@@ -233,7 +233,11 @@ public class Selector extends JFrame {
 				if (listOfFiles[i].isDirectory()) {
 					String gitFolderPath = listOfFiles[i].getAbsolutePath() + "/.git";
 					File gitFolder = new File(gitFolderPath);
-					if (gitFolder.exists() == true) {
+					
+					String mainFilePath = listOfFiles[i].getAbsolutePath() + "/main.lua";
+					File mainFile = new File(mainFilePath);
+					
+					if (gitFolder.exists() == true && mainFile.exists() == true) {
 						final String absolutePath = listOfFiles[i].getAbsolutePath();
 						Callback onLaunch = new Callback(){
 							public void onComplete() {

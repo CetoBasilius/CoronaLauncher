@@ -153,7 +153,10 @@ public class TabConfiguration extends JPanel{
 	}
 	
 	private void deleteProfiles() {
-		
+		File profileDirectory = new File(provisioningPathfield.getText());
+		for (File file: profileDirectory.listFiles()) {
+			file.delete();
+		}
 	}
 	
 	private void saveProperties() {

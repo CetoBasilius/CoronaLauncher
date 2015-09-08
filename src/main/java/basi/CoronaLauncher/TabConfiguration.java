@@ -11,6 +11,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
@@ -153,10 +154,16 @@ public class TabConfiguration extends JPanel{
 	}
 	
 	private void deleteProfiles() {
-		File profileDirectory = new File(provisioningPathfield.getText());
-		for (File file: profileDirectory.listFiles()) {
-			file.delete();
-		}
+		String message = "You will delete all files in \"" + provisioningPathfield.getText() + "\"";
+	    String title = "Delete provisioning profiles";
+
+	    int reply = JOptionPane.showConfirmDialog(null, message, title, JOptionPane.OK_CANCEL_OPTION);
+	    if (reply == JOptionPane.OK_OPTION) {
+	    	File profileDirectory = new File(provisioningPathfield.getText());
+			for (File file: profileDirectory.listFiles()) {
+				file.delete();
+			}
+	    }
 	}
 	
 	private void saveProperties() {
